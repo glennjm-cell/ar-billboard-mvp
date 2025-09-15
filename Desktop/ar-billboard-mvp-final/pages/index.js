@@ -5,33 +5,10 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.initMap = () => {
-        // Default map (Sydney fallback)
-        const map = new google.maps.Map(document.getElementById("map"), {
-          center: { lat: -33.865143, lng: 151.2099 },
+        new google.maps.Map(document.getElementById("map"), {
+          center: { lat: -33.865143, lng: 151.2099 }, // Sydney default
           zoom: 12,
         })
-
-        // Try to center on user location
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              const { latitude, longitude } = pos.coords
-              const userLocation = { lat: latitude, lng: longitude }
-              map.setCenter(userLocation)
-              map.setZoom(14)
-
-              // Add a marker for the user’s position
-              new google.maps.Marker({
-                position: userLocation,
-                map,
-                title: "You are here 🚀",
-              })
-            },
-            () => {
-              console.warn("Geolocation permission denied or unavailable.")
-            }
-          )
-        }
       }
     }
   }, [])
@@ -41,7 +18,7 @@ export default function Home() {
       <Head>
         <title>AR Billboard MVP</title>
         <script
-          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&callback=initMap&libraries=places`}
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&callback=initMap`}
           async
           defer
         ></script>
