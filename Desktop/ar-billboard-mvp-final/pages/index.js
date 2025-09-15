@@ -5,10 +5,35 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.initMap = () => {
-        new google.maps.Map(document.getElementById("map"), {
-          center: { lat: -33.865143, lng: 151.2099 }, // Sydney default
+        // Default fallback: Sydney
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: -33.865143, lng: 151.2099 },
           zoom: 12,
         })
+
+        // Try to locate the user
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const { latitude, longitude } = pos.coords
+              const userLocation = { lat: latitude, lng: longitude }
+
+              // Re-center map
+              map.setCenter(userLocation)
+              map.setZoom(14)
+
+              // Drop a marker at user’s position
+              new google.maps.Marker({
+                position: userLocation,
+                map,
+                title: "You are here 🚀",
+              })
+            },
+            (err) => {
+              console.warn("Geolocation error:", err.message)
+            }
+          )
+        }
       }
     }
   }, [])
