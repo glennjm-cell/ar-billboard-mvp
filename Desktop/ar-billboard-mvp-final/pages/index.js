@@ -4,12 +4,34 @@ import { useEffect } from "react"
 export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // Google will call this after the script loads
       window.initMap = () => {
-        new google.maps.Map(document.getElementById("map"), {
-          center: { lat: -33.865143, lng: 151.2099 }, // Sydney default
+        // Default map (Sydney fallback)
+        const map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: -33.865143, lng: 151.2099 },
           zoom: 12,
         })
+
+        // Try to center on user location
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              const { latitude, longitude } = pos.coords
+              const userLocation = { lat: latitude, lng: longitude }
+              map.setCenter(userLocation)
+              map.setZoom(14)
+
+              // Add a marker for the user’s position
+              new google.maps.Marker({
+                position: userLocation,
+                map,
+                title: "You are here 🚀",
+              })
+            },
+            () => {
+              console.warn("Geolocation permission denied or unavailable.")
+            }
+          )
+        }
       }
     }
   }, [])
@@ -31,7 +53,6 @@ export default function Home() {
           Visit <a href="/dashboard">Dashboard</a> to manage spots.
         </p>
 
-        {/* Map container */}
         <div
           id="map"
           style={{
