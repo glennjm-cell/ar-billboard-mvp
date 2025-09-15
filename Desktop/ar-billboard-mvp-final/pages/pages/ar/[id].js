@@ -28,8 +28,8 @@ export default function ARView() {
       >
         {/* Billboard image anchored to GPS coords */}
         <a-image
-          src={spot.image}
-          gps-entity-place={`latitude: ${spot.lat}; longitude: ${spot.lng};`}
+          src="/coca-cola-ad.png"
+          gps-entity-place={`latitude: -33.86785; longitude: 151.20732;`}
           look-at="[gps-camera]"
         ></a-image>
 
